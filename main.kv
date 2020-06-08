@@ -710,6 +710,7 @@
 
     grid: grid
 
+    average: average
     canvas:
         Color:
             rgba: bg_color
@@ -724,6 +725,13 @@
             size_hint:0.8, 0.15
             text: "Ratings"
             font_size: (min(root.width, root.height)/10)**(0.8)
+
+        Label:
+            id: average
+            text:""
+            font_size: (min(root.width, root.height)/14)**(0.8)
+            pos_hint: {"x":0.6, "top":0.15}
+            size_hint: 0.35, 0.1
 
         Button:
             pos_hint:{"x": 0.0, "top":0.975}

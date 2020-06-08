@@ -268,8 +268,19 @@ class Rating(Screen):
         self.grid.bind(minimum_height=self.grid.setter('height'))
         self.card_button_texts = dict()
 
+
+
+
     def on_enter(self, *args):
         ratings = db_x.get_all_ratings(config.flashcard_set.ID)
+        average1 =str(db_x.get_set_average_mark(config.flashcard_set.ID))
+
+        #self.ids.ave.text = str(average1)
+
+        output=str("Average rating: " + average1)
+
+        self.ids.average.text=output
+
         if ratings == -1:
             sm.current = "learningMethod"
             show_popup("There are no ratings")

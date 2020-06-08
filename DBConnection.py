@@ -103,8 +103,7 @@ class DBConnection:
 
     def add_rating(self, mark, description, creator_id, set_id):
         rate = self.db["rating"]
-        query = {"Creator_ID": creator_id, "Set_ID": set_id}
-        if self.db["rating"].count_documents(query) != 0:
+        if self.db["rating"].count_documents({"Creator_ID": creator_id, "Set_ID": set_id}) != 0:
             return -1  # already rated
         if not mark.isdigit():
             return -2  # mark isn't an intiger
@@ -137,6 +136,8 @@ class DBConnection:
         self.db["cardssets"].update_one({"_id": set_id}, {"$set": {"avg_mark": round(marks_sum / marks_amount, 2)}})
 
     def get_set_average_mark(self, set_id):
+        if (self.db["cardssets"].find_one({"_id": set_id}))["avg_mark"] == 0:
+            return -1
         return (self.db["cardssets"].find_one({"_id": set_id}))["avg_mark"]
 
     def get_all_ratings(self, set_id):
@@ -144,12 +145,12 @@ class DBConnection:
         if self.db['rating'].count_documents({"Set_ID": set_id}) == 0:
             return -1
         cursor = self.db["rating"].find({"Set_ID": set_id})
-        count=self.db["rating"].count_documents({"Set_ID":set_id})
+        count = self.db["rating"].count_documents({"Set_ID": set_id})
         for index in range(count):
-            ratings.append(classes.Rating(cursor[index]["Creator_ID"], cursor[index]["Set_ID"], cursor[index]["Mark"], cursor[index]["Description"]))
+            ratings.append(classes.Rating(cursor[index]["Creator_ID"], cursor[index]["Set_ID"], cursor[index]["Mark"],
+                                          cursor[index]["Description"]))
 
         return ratings
-
 
     def upload_set(self, cards_set):
         if cards_set.ID is None:
